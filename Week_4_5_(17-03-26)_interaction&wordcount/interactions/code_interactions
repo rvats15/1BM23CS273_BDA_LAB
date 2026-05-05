@@ -1,0 +1,97 @@
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ start-all.sh      # Start all Hadoop services
+jps               # Verify all daemon processes are running
+WARNING: Attempting to start all Apache Hadoop daemons as hadoop in 10 seconds.
+WARNING: This is not a recommended production deployment configuration.
+WARNING: Use CTRL-C to abort.
+Starting namenodes on [localhost]
+localhost: namenode is running as process 9879.  Stop it first and ensure /tmp/hadoop-hadoop-namenode.pid file is empty before retry.
+Starting datanodes
+localhost: datanode is running as process 10065.  Stop it first and ensure /tmp/hadoop-hadoop-datanode.pid file is empty before retry.
+Starting secondary namenodes [bmscecse-HP-Elite-Tower-600-G9-Desktop-PC]
+bmscecse-HP-Elite-Tower-600-G9-Desktop-PC: secondarynamenode is running as process 10364.  Stop it first and ensure /tmp/hadoop-hadoop-secondarynamenode.pid file is empty before retry.
+Starting resourcemanager
+resourcemanager is running as process 10650.  Stop it first and ensure /tmp/hadoop-hadoop-resourcemanager.pid file is empty before retry.
+Starting nodemanagers
+localhost: nodemanager is running as process 10825.  Stop it first and ensure /tmp/hadoop-hadoop-nodemanager.pid file is empty before retry.
+10065 DataNode
+16098 Jps
+9879 NameNode
+10825 NodeManager
+10650 ResourceManager
+10364 SecondaryNameNode
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ hdfs dfs -mkdir /bda_hadoop
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ hadoop fs -ls /
+Found 23 items
+drwxr-xr-x   - hadoop supergroup          0 2025-04-16 11:42 /FFF
+drwxr-xr-x   - hadoop supergroup          0 2023-06-26 14:24 /Pooja134
+drwxr-xr-x   - hadoop supergroup          0 2023-06-26 15:11 /PoojaBda
+drwxr-xr-x   - hadoop supergroup          0 2023-05-15 14:24 /Sample
+drwxr-xr-x   - hadoop supergroup          0 2026-03-31 16:15 /bda_hadoop
+drwxr-xr-x   - hadoop supergroup          0 2023-06-26 15:18 /bdahadoop
+drwxr-xr-x   - hadoop supergroup          0 2023-05-22 14:48 /dirnew
+drwxr-xr-x   - hadoop supergroup          0 2026-03-11 16:24 /inputbda
+drwxr-xr-x   - hadoop supergroup          0 2023-05-15 15:21 /labB4PB
+drwxr-xr-x   - hadoop supergroup          0 2025-05-27 11:50 /labcie1
+drwxr-xr-x   - hadoop supergroup          0 2025-04-16 11:47 /lll
+drwxr-xr-x   - hadoop supergroup          0 2026-03-31 15:48 /ncdc
+drwxr-xr-x   - hadoop supergroup          0 2025-05-07 12:06 /output
+drwxr-xr-x   - hadoop supergroup          0 2026-03-11 16:30 /outputbda
+drwxr-xr-x   - hadoop supergroup          0 2023-06-26 14:22 /pooja134
+-rw-r--r--   1 hadoop supergroup         52 2023-06-26 15:24 /poojaiyer134
+drwxr-xr-x   - hadoop supergroup          0 2025-05-07 12:53 /qwe
+drwxr-xr-x   - hadoop supergroup          0 2025-05-07 11:56 /qwerty
+drwxr-xr-x   - hadoop supergroup          0 2023-05-17 10:29 /rgs
+drwxr-xr-x   - hadoop supergroup          0 2023-05-22 14:51 /user
+drwxr-xr-x   - hadoop supergroup          0 2023-05-22 14:34 /wc_107
+drwxr-xr-x   - hadoop supergroup          0 2026-03-13 15:45 /weather
+drwxr-xr-x   - hadoop supergroup          0 2026-03-13 15:55 /weather1
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ hdfs dfs -put /home/hduser/Desktop/bda_local.txt /bda_hadoop/file.txt
+hdfs dfs -cat /bda_hadoop/file.txt
+put: `/home/hduser/Desktop/bda_local.txt': No such file or directory
+cat: `/bda_hadoop/file.txt': No such file or directory
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ hdfs dfs -mkdir /bda_hadoop
+mkdir: `/bda_hadoop': File exists
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ echo "Hello Hadoop BDA Lab" > /home/hadoop/Desktop/bda_local.txt
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ cat /home/hadoop/Desktop/bda_local.txt
+Hello Hadoop BDA Lab
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ hdfs dfs -put /home/hduser/Desktop/bda_local.txt /bda_hadoop/file.txt
+hdfs dfs -cat /bda_hadoop/file.txt
+put: `/home/hduser/Desktop/bda_local.txt': No such file or directory
+cat: `/bda_hadoop/file.txt': No such file or directory
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ # put
+hdfs dfs -put /home/hadoop/Desktop/bda_local.txt /bda_hadoop/file.txt
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ # cat
+hdfs dfs -cat /bda_hadoop/file.txt
+Hello Hadoop BDA Lab
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ hdfs dfs -copyFromLocal /home/hadoop/Desktop/bda_local.txt /bda_hadoop/file_cp_local.txt
+hdfs dfs -cat /bda_hadoop/file_cp_local.txt
+Hello Hadoop BDA Lab
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ # get
+hdfs dfs -get /bda_hadoop/file.txt /home/hadoop/Downloads/downloaded_file.txt
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ 
+# getmerge
+hdfs dfs -getmerge /bda_hadoop/file.txt /bda_hadoop/file_cp_local.txt /home/hadoop/Downloads/merged.txt
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ # getfacl
+hadoop fs -getfacl /bda_hadoop/
+# file: /bda_hadoop
+# owner: hadoop
+# group: supergroup
+user::rwx
+group::r-x
+other::r-x
+
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ # copyToLocal
+hdfs dfs -copyToLocal /bda_hadoop/file.txt /home/hadoop/Desktop
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ # mv
+hadoop fs -mv /bda_hadoop /abc
+hadoop fs -ls /abc
+Found 2 items
+-rw-r--r--   1 hadoop supergroup         21 2026-03-31 16:18 /abc/file.txt
+-rw-r--r--   1 hadoop supergroup         21 2026-03-31 16:18 /abc/file_cp_local.txt
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ # cp
+hadoop fs -cp /abc /hadoop_lab
+hadoop fs -ls /hadoop_lab
+Found 2 items
+-rw-r--r--   1 hadoop supergroup         21 2026-03-31 16:19 /hadoop_lab/file.txt
+-rw-r--r--   1 hadoop supergroup         21 2026-03-31 16:19 /hadoop_lab/file_cp_local.txt
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ 

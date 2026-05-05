@@ -1,0 +1,159 @@
+use employee
+switched to db employee
+db.createCollection("Employee_Info")
+{ ok: 1 }
+db.Employee_Info.insertMany([
+  {
+    _id: 121,
+    Emp_Name: "Rahul",
+    Designation: "Software Engineer",
+    Date_of_Joining: ISODate("2020-06-15"),
+    Salary: 60000,
+    Dept_Name: "IT"
+  },
+  {
+    _id: 122,
+    Emp_Name: "Anita",
+    Designation: "Senior Developer",
+    Date_of_Joining: ISODate("2019-03-10"),
+    Salary: 80000,
+    Dept_Name: "IT"
+  },
+  {
+    _id: 123,
+    Emp_Name: "Vikram",
+    Designation: "HR Manager",
+    Date_of_Joining: ISODate("2018-01-20"),
+    Salary: 70000,
+    Dept_Name: "HR"
+  }
+])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': 121,
+    '1': 122,
+    '2': 123
+  }
+}
+db.Employee_Info.updateOne(
+  { _id: 121 },
+  {
+    $set: {
+      Emp_Name: "Rahul Sharma",
+      Dept_Name: "R&D"
+    }
+  }
+)
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+db.Employee_Info.find().sort({ Salary: 1 })
+{
+  _id: 121,
+  Emp_Name: 'Rahul Sharma',
+  Designation: 'Software Engineer',
+  Date_of_Joining: 2020-06-15T00:00:00.000Z,
+  Salary: 60000,
+  Dept_Name: 'R&D'
+}
+{
+  _id: 123,
+  Emp_Name: 'Vikram',
+  Designation: 'HR Manager',
+  Date_of_Joining: 2018-01-20T00:00:00.000Z,
+  Salary: 70000,
+  Dept_Name: 'HR'
+}
+{
+  _id: 122,
+  Emp_Name: 'Anita',
+  Designation: 'Senior Developer',
+  Date_of_Joining: 2019-03-10T00:00:00.000Z,
+  Salary: 80000,
+  Dept_Name: 'IT'
+}
+db.Employee_Info.updateOne(
+  { _id: 121 },
+  {
+    $set: {
+      Projects: ["Payroll System", "HR Automation"]
+    }
+  }
+)
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+db.Employee_Info.updateOne(
+  { _id: 122 },
+  {
+    $set: {
+      Projects: ["E-Commerce App", "Mobile API"]
+    }
+  }
+)
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+db.Employee_Info.find()
+{
+  _id: 121,
+  Emp_Name: 'Rahul Sharma',
+  Designation: 'Software Engineer',
+  Date_of_Joining: 2020-06-15T00:00:00.000Z,
+  Salary: 60000,
+  Dept_Name: 'R&D',
+  Projects: [
+    'Payroll System',
+    'HR Automation'
+  ]
+}
+{
+  _id: 122,
+  Emp_Name: 'Anita',
+  Designation: 'Senior Developer',
+  Date_of_Joining: 2019-03-10T00:00:00.000Z,
+  Salary: 80000,
+  Dept_Name: 'IT',
+  Projects: [
+    'E-Commerce App',
+    'Mobile API'
+  ]
+}
+{
+  _id: 123,
+  Emp_Name: 'Vikram',
+  Designation: 'HR Manager',
+  Date_of_Joining: 2018-01-20T00:00:00.000Z,
+  Salary: 70000,
+  Dept_Name: 'HR'
+}
+db.Employee_Info.updateMany(
+  {},
+  { $set: { createdAt: new Date() } }
+)
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}db.Employee_Info.createIndex(
+  { createdAt: 1 },
+  { expireAfterSeconds: 15 }
+)
+createdAt_1
+db.Employee_Info.find()
+//empty

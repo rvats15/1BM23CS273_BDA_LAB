@@ -1,0 +1,77 @@
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~$ mkdir -p ~/wordcount/src
+cd ~/wordcount
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ nano ~/wordcount/src/WCMapper.java
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ nano ~/wordcount/src/WCReducer.java
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ nano ~/wordcount/src/WCDriver.java
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ mkdir -p ~/input
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ nano ~/input/sample.txt
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ mkdir -p ~/wordcount/classes
+
+javac -classpath $(hadoop classpath) \
+  -d ~/wordcount/classes \
+  ~/wordcount/src/WCMapper.java \
+  ~/wordcount/src/WCReducer.java \
+  ~/wordcount/src/WCDriver.java
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ ls ~/wordcount/classes/
+WCDriver.class  WCMapper.class  WCReducer.class
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ jar -cvf ~/Desktop/wordcount.jar -C ~/wordcount/classes .
+added manifest
+adding: WCMapper.class(in = 1760) (out= 705)(deflated 59%)
+adding: WCReducer.class(in = 1529) (out= 603)(deflated 60%)
+adding: WCDriver.class(in = 1769) (out= 886)(deflated 49%)
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ hadoop fs -mkdir /inputbda
+hadoop fs -copyFromLocal ~/input/sample.txt /inputbda/sample.txt
+hadoop fs -ls /inputbda
+mkdir: `/inputbda': File exists
+copyFromLocal: `/inputbda/sample.txt': File exists
+Found 1 items
+-rw-r--r--   1 hadoop supergroup         89 2026-03-11 16:24 /inputbda/sample.txt
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ hadoop jar ~/Desktop/wordcount.jar WCDriver /inputbda/sample.txt /outputbda
+2026-03-31 16:31:13,347 INFO impl.MetricsConfig: Loaded properties from hadoop-metrics2.properties
+2026-03-31 16:31:13,388 INFO impl.MetricsSystemImpl: Scheduled Metric snapshot period at 10 second(s).
+2026-03-31 16:31:13,388 INFO impl.MetricsSystemImpl: JobTracker metrics system started
+2026-03-31 16:31:13,396 WARN impl.MetricsSystemImpl: JobTracker metrics system already initialized!
+Exception in thread "main" org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs://localhost:9000/outputbda already exists
+	at org.apache.hadoop.mapred.FileOutputFormat.checkOutputSpecs(FileOutputFormat.java:131)
+	at org.apache.hadoop.mapreduce.JobSubmitter.checkSpecs(JobSubmitter.java:279)
+	at org.apache.hadoop.mapreduce.JobSubmitter.submitJobInternal(JobSubmitter.java:143)
+	at org.apache.hadoop.mapreduce.Job$11.run(Job.java:1571)
+	at org.apache.hadoop.mapreduce.Job$11.run(Job.java:1568)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/javax.security.auth.Subject.doAs(Subject.java:423)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1878)
+	at org.apache.hadoop.mapreduce.Job.submit(Job.java:1568)
+	at org.apache.hadoop.mapred.JobClient$1.run(JobClient.java:576)
+	at org.apache.hadoop.mapred.JobClient$1.run(JobClient.java:571)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at java.base/javax.security.auth.Subject.doAs(Subject.java:423)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1878)
+	at org.apache.hadoop.mapred.JobClient.submitJobInternal(JobClient.java:571)
+	at org.apache.hadoop.mapred.JobClient.submitJob(JobClient.java:562)
+	at org.apache.hadoop.mapred.JobClient.runJob(JobClient.java:873)
+	at WCDriver.run(WCDriver.java:28)
+	at org.apache.hadoop.util.ToolRunner.run(ToolRunner.java:81)
+	at org.apache.hadoop.util.ToolRunner.run(ToolRunner.java:95)
+	at WCDriver.main(WCDriver.java:32)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:323)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:236)
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ hadoop fs -ls /outputbda
+hadoop fs -cat /outputbda/part-00000
+Found 2 items
+-rw-r--r--   1 hadoop supergroup          0 2026-03-11 16:30 /outputbda/_SUCCESS
+-rw-r--r--   1 hadoop supergroup         69 2026-03-11 16:30 /outputbda/part-00000
+are	1
+brother	1
+family	1
+hi	1
+how	5
+is	4
+job	1
+sister	1
+you	1
+your	4
+hadoop@bmscecse-HP-Elite-Tower-600-G9-Desktop-PC:~/wordcount$ 

@@ -1,0 +1,84 @@
+CQLSH
+CREATE KEYSPACE Employee 
+WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+USE Employee;
+cqlsh:emp1> CREATE TABLE Employee_Info (
+        ...     Emp_Id int PRIMARY KEY,
+        ...     Emp_Name text,
+        ...     Designation text,
+        ...     Date_of_Joining date,
+        ...     Salary decimal,
+        ...     Dept_Name text
+        ... );
+cqlsh:emp1> BEGIN BATCH
+        ...     INSERT INTO Employee_Info (Emp_Id, Emp_Name, Designation, Date_of_Joining, Salary, Dept_Name) 
+        ...     VALUES (121, 'Alice Smith', 'Lead Engineer', '2022-01-15', 95000, 'R&D');
+        ...     
+        ...     INSERT INTO Employee_Info (Emp_Id, Emp_Name, Designation, Date_of_Joining, Salary, Dept_Name) 
+        ...     VALUES (122, 'Bob Jones', 'Senior Analyst', '2021-03-22', 82000, 'Finance');
+        ... APPLY BATCH;
+cqlsh:emp1> UPDATE Employee_Info 
+        ... SET Emp_Name = 'Alice Johnson', Dept_Name = 'Cloud Ops' 
+        ... WHERE Emp_Id = 121;
+cqlsh:emp1> SELECT * FROM Employee_Info ALLOW FILTERING;
+
+ emp_id | date_of_joining | dept_name | designation    | emp_name      | salary
+--------+-----------------+-----------+----------------+---------------+--------
+    122 |      2021-03-22 |   Finance | Senior Analyst |     Bob Jones |  82000
+    121 |      2022-01-15 | Cloud Ops |  Lead Engineer | Alice Johnson |  95000
+
+(2 rows)
+cqlsh:emp1> ALTER TABLE Employee_Info ADD Projects set<text>;
+cqlsh:emp1> UPDATE Employee_Info 
+        ... SET Projects = Projects + {'Project Apollo', 'Project Zeus'} 
+        ... WHERE Emp_Id = 121;
+cqlsh:emp1> select * from Employee_Info;
+
+ emp_id | date_of_joining | dept_name | designation    | emp_name      | projects                           | salary
+--------+-----------------+-----------+----------------+---------------+------------------------------------+--------
+    122 |      2021-03-22 |   Finance | Senior Analyst |     Bob Jones |                               null |  82000
+    121 |      2022-01-15 | Cloud Ops |  Lead Engineer | Alice Johnson | {'Project Apollo', 'Project Zeus'} |  95000
+
+(2 rows)
+cqlsh:emp1> INSERT INTO Employee_Info (Emp_Id, Emp_Name, Salary) 
+        ... VALUES (123, 'Temporary User', 50000) 
+        ... USING TTL 15;
+cqlsh:emp1> select * from Employee_Info;
+
+ emp_id | date_of_joining | dept_name | designation    | emp_name       | projects                           | salary
+--------+-----------------+-----------+----------------+----------------+------------------------------------+--------
+    123 |            null |      null |           null | Temporary User |                               null |  50000
+    122 |      2021-03-22 |   Finance | Senior Analyst |      Bob Jones |                               null |  82000
+    121 |      2022-01-15 | Cloud Ops |  Lead Engineer |  Alice Johnson | {'Project Apollo', 'Project Zeus'} |  95000
+
+(3 rows)
+cqlsh:emp1> select * from Employee_Info;
+
+ emp_id | date_of_joining | dept_name | designation    | emp_name      | projects                           | salary
+--------+-----------------+-----------+----------------+---------------+------------------------------------+--------
+    122 |      2021-03-22 |   Finance | Senior Analyst |     Bob Jones |                               null |  82000
+    121 |      2022-01-15 | Cloud Ops |  Lead Engineer | Alice Johnson | {'Project Apollo', 'Project Zeus'} |  95000
+
+(2 rows)
+cqlsh:emp1> UPDATE Employee_Info
+        ... USING TTL 15
+        ... SET Salary = 0
+        ... WHERE Emp_Id = 121;
+cqlsh:emp1> select * from Employee_Info;
+
+ emp_id | date_of_joining | dept_name | designation    | emp_name      | projects                           | salary
+--------+-----------------+-----------+----------------+---------------+------------------------------------+--------
+    122 |      2021-03-22 |   Finance | Senior Analyst |     Bob Jones |                               null |  82000
+    121 |      2022-01-15 | Cloud Ops |  Lead Engineer | Alice Johnson | {'Project Apollo', 'Project Zeus'} |      0
+
+(2 rows)
+cqlsh:emp1> select * from Employee_Info;
+
+ emp_id | date_of_joining | dept_name | designation    | emp_name      | projects                           | salary
+--------+-----------------+-----------+----------------+---------------+------------------------------------+--------
+    122 |      2021-03-22 |   Finance | Senior Analyst |     Bob Jones |                               null |  82000
+    121 |      2022-01-15 | Cloud Ops |  Lead Engineer | Alice Johnson | {'Project Apollo', 'Project Zeus'} |   null
+
+(2 rows)
+cqlsh:emp1> 
